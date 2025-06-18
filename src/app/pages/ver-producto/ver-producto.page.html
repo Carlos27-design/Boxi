@@ -1,0 +1,43 @@
+<div class="ion-page" id="main-content">
+  <ion-content [fullscreen]="true">
+    <!-- HEADER -->
+    <ion-header>
+      <ion-toolbar color="primary">
+        <img
+          src="assets/images/LogoBoxi.png"
+          alt="Description of the image"
+          style="width: 100px; height: auto"
+        />
+
+        <ion-buttons slot="end">
+          <ion-button (click)="goBack()">
+            <ion-icon slot="icon-only" name="arrow-back-outline"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+
+    <!-- IMAGEN PRODUCTO -->
+    <!-- Imagen -->
+    <div class="banner">
+      <img [src]="producto?.images[0] | imageProduct" alt="product?.nombre" />
+    </div>
+
+    <!-- Información del producto -->
+    <div class="prodtitle fondocarton">
+      <h3>{{ producto?.nombre }}</h3>
+      <h5>{{ producto?.descripcion }}</h5>
+    </div>
+
+    <div class="prodbody fondocarton">
+      <h3>Detalles del Producto</h3>
+      <h5>Precio del objeto: {{ producto?.precio | currency:'CLP' }}</h5>
+      <h5>Cantidad restante: {{ producto?.stock }}</h5>
+      <h5>Fecha de Creación: {{ producto?.createdAt | date:'dd/MM/yyyy' }}</h5>
+      <h5>
+        Última Fecha de Modificación: {{ producto?.updatedAt | date:'dd/MM/yyyy'
+        }}
+      </h5>
+    </div>
+  </ion-content>
+</div>

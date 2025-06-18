@@ -1,0 +1,25 @@
+.image-column {
+    padding: 0;  /* Remove padding from the column */
+    margin: 0;   /* Remove margin from the column */
+  }
+  
+  .image-column img {
+    width: 100%;  /* Make the image take up 100% of the column width */
+    height: 100%; /* Make the image take up 100% of the column height */
+    object-fit: cover;  /* Ensure the image fills the container while maintaining aspect ratio */
+    display: block;  /* Ensures the image behaves like a block element (removes any unwanted space below the image) */
+  }
+
+.invflex{
+  display: flex;
+  flex-direction: column;
+  margin:0;
+}
+
+
+.fondocarton {
+  background-image: url('/assets/images/fondo.jpeg'); /* Ruta relativa o absoluta */
+  background-size: cover;       /* Escala la imagen para cubrir todo el viewport */
+  background-repeat: no-repeat; /* Evita que la imagen se repita */
+  background-position: center;  /* Centra la imagen */
+}

@@ -1,0 +1,33 @@
+<app-base1 title="Inicio"></app-base1>
+
+<ion-content [fullscreen]="true">
+
+  <div class="input-wrapper">
+    <h1>Crear Usuario</h1>
+    <p>A continuacion, rellene los siguientes campos.</p>
+    <ion-input class="inputfield1" labelPlacement="floating" fill="outline">
+      <div slot="label">Nombre de usuario</div>
+    </ion-input>
+
+    <ion-input class="inputfield1" labelPlacement="floating" fill="outline">
+      <div slot="label">Email</div>
+    </ion-input>
+  
+    <ion-input class="inputfield1" labelPlacement="floating" fill="outline" style="margin-bottom: 20px;">
+      <div slot="label">Contraseña</div>
+    </ion-input>
+
+    <ion-input class="inputfield1" labelPlacement="floating" fill="outline" style="margin-bottom: 20px;">
+      <div slot="label">Confirmar Contraseña</div>
+    </ion-input>
+    
+    <div class="checkbox-container">
+      <ion-checkbox class="checkbox" slot="start"></ion-checkbox>
+      <span class="checkbox-label">Acepto los Términos de Servicio.</span>
+    </div>
+
+    <ion-button>Crear Usuario</ion-button>
+
+
+  </div>
+</ion-content>

@@ -1,0 +1,107 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start"></ion-buttons>
+    <img
+      src="assets/images/LogoBoxi.png"
+      alt="Logo"
+      style="width: 100px; height: auto"
+    />
+    <ion-buttons slot="end">
+      <ion-button (click)="home()">
+        <ion-icon slot="icon-only" name="arrow-back-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div class="input-wrapper">
+    <h1>Crear Producto</h1>
+    <p>Rellena los campos para registrar un nuevo producto.</p>
+
+    <!-- Formulario con validación -->
+    <form [formGroup]="productForm" (ngSubmit)="crearProducto()">
+      <!-- Código -->
+      <ion-input
+        class="inputfield1"
+        labelPlacement="floating"
+        formControlName="codigo"
+        fill="outline"
+        name="codigo"
+        required
+      >
+        <div slot="label">Código del Producto</div>
+      </ion-input>
+
+      <!-- Nombre -->
+      <ion-input
+        class="inputfield1"
+        labelPlacement="floating"
+        fill="outline"
+        formControlName="nombre"
+        name="nombre"
+        required
+      >
+        <div slot="label">Nombre del Producto</div>
+      </ion-input>
+
+      <!-- Descripción -->
+      <ion-textarea
+        class="inputfield1"
+        labelPlacement="floating"
+        formControlName="descripcion"
+        fill="outline"
+        auto-grow="true"
+        name="descripcion"
+        required
+      >
+        <div slot="label">Descripción</div>
+      </ion-textarea>
+
+      <!-- Cantidad -->
+      <ion-input
+        class="inputfield1"
+        labelPlacement="floating"
+        formControlName="stock"
+        fill="outline"
+        type="number"
+        name="stock"
+        required
+        min="0"
+      >
+        <div slot="label">Cantidad</div>
+      </ion-input>
+
+      <!-- Precio -->
+      <ion-input
+        class="inputfield1"
+        labelPlacement="floating"
+        formControlName="precio"
+        fill="outline"
+        type="number"
+        name="precio"
+        required
+        min="0"
+      >
+        <div slot="label">Precio (CLP)</div>
+      </ion-input>
+
+      <!-- Imagenes -->
+      <ion-item>
+        <ion-label>Imagenes:</ion-label>
+        <input
+          type="file"
+          multiple
+          accept="image/*"
+          (change)="onFilesChanged($event)"
+          style="margin-top: 10px"
+        />
+      </ion-item>
+
+      <!-- Botón -->
+      <ion-button expand="block" type="submit" style="margin-top: 20px">
+        Crear Producto
+      </ion-button>
+    </form>
+  </div>
+</ion-content>
