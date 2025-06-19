@@ -1,7 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { IonHeader } from '@ionic/angular/standalone';
-import { LoadingController } from '@ionic/angular';
-import { ActionSheetController } from '@ionic/angular';
+import { ActionSheetController, AlertController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { producto } from 'src/app/models/producto.models';
 import { ProductoService } from 'src/app/service/producto.service';
@@ -14,9 +12,12 @@ import { ProductoService } from 'src/app/service/producto.service';
 })
 export class PrincipalPage implements OnInit {
   public productos: producto[] = [];
+  public productosFiltrados: producto[] = [];
+
   constructor(
     private readonly _productoService: ProductoService,
     private actionSheetController: ActionSheetController,
+    private alertController: AlertController,
     private router: Router
   ) {}
 
@@ -24,7 +25,7 @@ export class PrincipalPage implements OnInit {
     this.getData();
   }
 
-  async presentActionSheet() {
+  async presentActionSheet(producto: producto) {
     const actionSheet = await this.actionSheetController.create({
       header: 'Opciones del producto',
       buttons: [
@@ -32,15 +33,17 @@ export class PrincipalPage implements OnInit {
           text: 'Modificar producto',
           icon: 'create-outline',
           handler: () => {
-            console.log('Modificar producto');
-          },
+            this.router.navigate(['/editar-producto'], {
+              state: { producto },
+            });
+          }
         },
         {
           text: 'Eliminar producto',
           role: 'destructive',
           icon: 'trash-outline',
           handler: () => {
-            console.log('Eliminar producto');
+            this.presentDeleteConfirm(producto);
           },
         },
         {
@@ -53,21 +56,51 @@ export class PrincipalPage implements OnInit {
     await actionSheet.present();
   }
 
-  // Define the goToPrincipal method inside the HomePage component class
+  async presentDeleteConfirm(producto: producto) {
+    const alert = await this.alertController.create({
+      header: '¿Estás seguro?',
+      message: `¿Deseas eliminar <strong>${producto.nombre}</strong>?`,
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+        },
+        {
+          text: 'Eliminar',
+          role: 'destructive',
+          handler: () => {
+            this._productoService.deleteProducto(producto.id).subscribe({
+              next: () => {
+                this.getData(); // Recargar lista de productos
+              },
+              error: (err) => {
+                console.error('Error al eliminar producto:', err);
+              },
+            });
+          },
+        },
+      ],
+    });
+
+    await alert.present();
+  }
+
   VerProducto(producto: any) {
     this.router.navigate(['/ver-producto'], {
-      state: { producto }, // Esto pasa el objeto como estado
+      state: { producto },
     });
   }
 
   crearprod() {
-    this.router.navigate(['/crear-producto']); // Navigate to the 'principal' route
+    this.router.navigate(['/crear-producto']);
   }
+
   private getData() {
-    this._productoService.getProductos().subscribe((productos: producto[]) => {
-      this.productos = productos;
-    });
-  }
+  this._productoService.getProductos().subscribe((productos: producto[]) => {
+    this.productos = productos;
+    this.productosFiltrados = productos;
+  });
+}
 
   public getImages(producto: producto): string | null {
     if (producto && producto.images && producto.images.length > 0) {
@@ -76,4 +109,11 @@ export class PrincipalPage implements OnInit {
 
     return null;
   }
+
+  public filtrarProductos(event: any) {
+  const query = event.target.value?.toLowerCase() || '';
+  this.productosFiltrados = this.productos.filter(prod =>
+    prod.nombre.toLowerCase().includes(query)
+  );
+}
 }

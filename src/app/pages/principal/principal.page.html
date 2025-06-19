@@ -32,13 +32,13 @@
 
 <!-- Contenido principal -->
 <div class="ion-page" id="main-content">
-  <ion-content [fullscreen]="true" class="fondocarton">
-    <app-base1 title="Inicio"></app-base1>
+  <app-base1 title="Inicio"></app-base1>
     <!-- Aquí invocas el componente Base1 -->
 
     <!-- Barra de búsqueda -->
     <ion-toolbar>
-      <ion-searchbar></ion-searchbar>
+      <ion-searchbar (ionInput)="filtrarProductos($event)"></ion-searchbar>
+
 
       <ion-buttons slot="end">
         <ion-button>
@@ -47,9 +47,12 @@
       </ion-buttons>
     </ion-toolbar>
 
+  
+  <ion-content [fullscreen]="true" class="fondocarton">
+    
     <!-- Productos -->
     <div class="invflex">
-      <ion-card class="fondocarton" *ngFor="let producto of productos">
+      <ion-card class="fondocarton" *ngFor="let producto of productosFiltrados">
         <ion-row>
           <!-- Columna para la imagen -->
           <ion-col size="4" class="image-column">
@@ -69,14 +72,15 @@
           >
             <ion-card-header>
               <ion-card-title>{{producto.nombre}}</ion-card-title>
-              <ion-card-subtitle>{{producto.stock}}</ion-card-subtitle>
+              <ion-card-subtitle>Stock: {{producto.stock}}</ion-card-subtitle>
+              <ion-card-subtitle>Precio: {{ producto.precio | currency:'CLP ':'symbol':'1.0-0' }}</ion-card-subtitle>
             </ion-card-header>
           </ion-col>
           <ion-button
             fill="clear"
             size="medium"
             style="position: absolute; top: 20; right: 0"
-            (click)="presentActionSheet()"
+            (click)="presentActionSheet(producto)"
           >
             <ion-icon name="ellipsis-vertical" slot="icon-only"></ion-icon>
           </ion-button>

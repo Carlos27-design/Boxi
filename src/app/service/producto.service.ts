@@ -13,7 +13,7 @@ export class ProductoService {
     return this._http.get<producto[]>(`${URL}/product`);
   }
 
-  public getProducto(id: number) {
+  public getProducto(id: string) {
     return this._http.get(`${URL}/product/${id}`);
   }
 
@@ -34,11 +34,11 @@ export class ProductoService {
     );
   }
 
-  public updateProducto(id: number, producto: producto) {
-    return this._http.put(`${URL}/product/${id}`, producto);
+  public updateProducto(id: string, producto: producto) {
+    return this._http.patch(`${URL}/product/${id}`, producto);
   }
 
-  public deleteProducto(id: number) {
+  public deleteProducto(id: string) {
     return this._http.delete(`${URL}/product/${id}`);
   }
 

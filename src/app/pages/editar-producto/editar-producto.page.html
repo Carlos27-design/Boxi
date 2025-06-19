@@ -7,7 +7,7 @@
       style="width: 100px; height: auto"
     />
     <ion-buttons slot="end">
-      <ion-button (click)="home()">
+      <ion-button (click)="volver()">
         <ion-icon slot="icon-only" name="arrow-back-outline"></ion-icon>
       </ion-button>
     </ion-buttons>
@@ -16,11 +16,10 @@
 
 <ion-content [fullscreen]="true">
   <div class="input-wrapper">
-    <h1>Crear Producto</h1>
-    <p>Rellena los campos para registrar un nuevo producto.</p>
+    <h1>Editar Producto</h1>
+    <p>Modifica los campos del producto seleccionado.</p>
 
-    <!-- Formulario con validación -->
-    <form [formGroup]="productForm" (ngSubmit)="crearProducto()" style="width:100%">
+    <form [formGroup]="productForm" (ngSubmit)="guardarCambios()" style="width:100%">
       <!-- Código -->
       <ion-input
         class="inputfield1"
@@ -29,12 +28,14 @@
         fill="outline"
         name="codigo"
         required
+        [disabled]="true"
       >
         <div slot="label">Código del Producto</div>
       </ion-input>
       <ion-text color="danger" *ngIf="productForm.get('codigo')?.hasError('codigoDuplicado') && productForm.get('codigo')?.touched">
         El código ya está en uso.
       </ion-text>
+
       <!-- Nombre -->
       <ion-input
         class="inputfield1"
@@ -69,7 +70,7 @@
         type="number"
         name="stock"
         required
-        min="0"
+        min="1"
       >
         <div slot="label">Cantidad</div>
       </ion-input>
@@ -86,52 +87,48 @@
         type="number"
         name="precio"
         required
-        min="0"
+        min="1"
       >
         <div slot="label">Precio (CLP)</div>
       </ion-input>
       <ion-text color="danger" *ngIf="productForm.get('precio')?.hasError('min') && productForm.get('precio')?.touched">
         El precio debe ser mayor a 0.
       </ion-text>
-  
-      <!-- Vista previa de imágenes + botón de añadir -->
-<div class="image-preview-container">
-  <!-- Previews -->
-  <div class="image-wrapper" *ngFor="let img of tempImages; let i = index">
-    <img [src]="img" alt="preview" class="preview-img" />
-    <button type="button" class="remove-btn" (click)="removeImage(i)">
-      &times;
-    </button>
-  </div>
 
-  <!-- Botón cuadrado para añadir -->
-  <label class="add-image-box">
-    <ion-icon name="add" class="add-icon"></ion-icon>
-    <input
-      type="file"
-      multiple
-      accept="image/*"
-      (change)="onFilesChanged($event)"
-      hidden
-    />
-  </label>
-</div>
+      <!-- Imágenes -->
+      <div class="image-preview-container">
+        <div class="image-wrapper" *ngFor="let img of tempImages; let i = index">
+          <img [src]="img" alt="preview" class="preview-img" />
+          <button type="button" class="remove-btn" (click)="removeImage(i)">
+            &times;
+          </button>
+        </div>
+
+        <label class="add-image-box">
+          <ion-icon name="add" class="add-icon"></ion-icon>
+          <input
+            type="file"
+            multiple
+            accept="image/*"
+            (change)="onFilesChanged($event)"
+            hidden
+          />
+        </label>
+      </div>
 
       <!-- Botón -->
       <ion-button
-  expand="block"
-  type="submit"
-  [disabled]="productForm.invalid || tempImages.length === 0"
-  style="margin-top: 20px"
->
-  Crear Producto
-</ion-button>
+        expand="block"
+        type="submit"
+        [disabled]="productForm.invalid || tempImages.length === 0"
+        style="margin-top: 20px"
+      >
+        Guardar Cambios
+      </ion-button>
     </form>
   </div>
 
-  <!-- Capa de carga -->
-<div *ngIf="cargando" class="overlay">
+  <div *ngIf="cargando" class="overlay">
   <ion-spinner name="crescent" color="primary"></ion-spinner>
 </div>
-
 </ion-content>
