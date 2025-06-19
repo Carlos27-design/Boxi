@@ -27,6 +27,11 @@ const routes: Routes = [
     path: 'crear-producto',
     loadChildren: () => import('./pages/crear-producto/crear-producto.module').then( m => m.CrearProductoPageModule)
   },
+  {
+    path: 'registrar-venta',
+    loadChildren: () => import('./pages/registrar-venta/registrar-venta.module').then( m => m.RegistrarVentaPageModule)
+  },
+
 ];
 
 @NgModule({
