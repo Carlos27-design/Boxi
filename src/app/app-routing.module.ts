@@ -36,6 +36,20 @@ const routes: Routes = [
     loadChildren: () => import('./pages/registrar-venta/registrar-venta.module').then( m => m.RegistrarVentaPageModule)
   }
 ,
+  {
+    path: 'historial-ventas',
+    loadChildren: () => import('./pages/historial-ventas/historial-ventas.module').then( m => m.HistorialVentasPageModule)
+  },
+  {
+    path: 'ajustes',
+    loadChildren: () => import('./pages/ajustes/ajustes.module').then( m => m.AjustesPageModule)
+  },
+  {
+    path: 'estadisticas',
+    loadChildren: () => import('./pages/estadisticas/estadisticas.module').then( m => m.EstadisticasPageModule)
+  },
+
+
 ];
 
 @NgModule({

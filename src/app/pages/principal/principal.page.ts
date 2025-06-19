@@ -161,6 +161,18 @@ export class PrincipalPage implements OnInit {
     this.router.navigate(['/registrar-venta']);
   }
 
+  historialventa() {
+    this.router.navigate(['/historial-ventas']);
+  }
+
+  estadisticas() {
+    this.router.navigate(['/estadisticas']);
+  }
+
+  ajustes() {
+    this.router.navigate(['/ajustes']);
+  }
+
   cerrarsesion() {
     this.router.navigate(['/home']);
   }

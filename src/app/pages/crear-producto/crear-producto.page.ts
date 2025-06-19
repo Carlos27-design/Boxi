@@ -39,12 +39,12 @@ export class CrearProductoPage {
   });
 
   public crearProducto() {
+    this.cargando = true;
   if (this.productForm.invalid || this.tempImages.length === 0) {
     this.showToast1('Por favor completa todos los campos y selecciona al menos una imagen.');
+    this.cargando = false;
     return;
   }
-
-  this.cargando = true;
 
   const product = this.productForm.value as producto;
 
@@ -56,7 +56,9 @@ export class CrearProductoPage {
     error: (err) => {
       if (err.error?.message?.toLowerCase().includes('codigo')) {
         this.showToast1('El código ya está en uso. Debe ser único.');
+        this.cargando = false;
       } else {
+        this.cargando = false;
         this.showToast1('Ocurrió un error al crear el producto.');
       }
     },
@@ -82,7 +84,6 @@ export class CrearProductoPage {
   public removeImage(index: number) {
   this.tempImages.splice(index, 1);
 
-  // Crear una nueva FileList sin el archivo eliminado
   const dt = new DataTransfer();
   Array.from(this.imageFileList || []).forEach((file, i) => {
     if (i !== index) dt.items.add(file);
