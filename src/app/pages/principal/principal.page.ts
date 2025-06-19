@@ -11,6 +11,11 @@ import { ProductoService } from 'src/app/service/producto.service';
   standalone: false,
 })
 export class PrincipalPage implements OnInit {
+  mostrarFiltros = false;
+  filtroActivo = false;
+  filtroTipo: string | null = null;
+  searchQuery: string = '';
+
   public productos: producto[] = [];
   public productosFiltrados: producto[] = [];
 
@@ -25,6 +30,63 @@ export class PrincipalPage implements OnInit {
     this.getData();
   }
 
+  private getData() {
+    this._productoService.getProductos().subscribe((productos: producto[]) => {
+      this.productos = productos;
+      this.filtrarProductos(); // aplica búsqueda y filtros si hay
+    });
+  }
+
+  public filtrarProductos(event?: any) {
+    const inputValue = event?.target?.value ?? '';
+    this.searchQuery = inputValue.toLowerCase();
+
+    let resultado = [...this.productos];
+
+    if (this.searchQuery && this.searchQuery.trim() !== '') {
+      resultado = resultado.filter(prod =>
+        prod.nombre.toLowerCase().includes(this.searchQuery)
+      );
+    }
+
+    switch (this.filtroTipo) {
+      case 'stockMayor':
+        resultado.sort((a, b) => b.stock - a.stock);
+        break;
+      case 'stockMenor':
+        resultado.sort((a, b) => a.stock - b.stock);
+        break;
+      case 'precioMayor':
+        resultado.sort((a, b) => b.precio - a.precio);
+        break;
+      case 'precioMenor':
+        resultado.sort((a, b) => a.precio - b.precio);
+        break;
+    }
+
+    this.productosFiltrados = resultado;
+  }
+
+  aplicarFiltro(tipo: string) {
+    this.filtroTipo = tipo;
+    this.filtroActivo = true;
+    this.mostrarFiltros = false;
+    this.filtrarProductos();
+  }
+
+  toggleFiltro() {
+    if (this.filtroActivo) {
+      // Si ya hay un filtro, desactivarlo
+      this.filtroTipo = null;
+      this.filtroActivo = false;
+      this.mostrarFiltros = false;
+      this.filtrarProductos();
+    } else {
+      // Mostrar menú
+      this.mostrarFiltros = !this.mostrarFiltros;
+    }
+  }
+
   async presentActionSheet(producto: producto) {
     const actionSheet = await this.actionSheetController.create({
       header: 'Opciones del producto',
@@ -36,7 +98,7 @@ export class PrincipalPage implements OnInit {
             this.router.navigate(['/editar-producto'], {
               state: { producto },
             });
-          }
+          },
         },
         {
           text: 'Eliminar producto',
@@ -59,7 +121,7 @@ export class PrincipalPage implements OnInit {
   async presentDeleteConfirm(producto: producto) {
     const alert = await this.alertController.create({
       header: '¿Estás seguro?',
-      message: `¿Deseas eliminar <strong>${producto.nombre}</strong>?`,
+      message: `¿Deseas eliminar ${producto.nombre}?`,
       buttons: [
         {
           text: 'Cancelar',
@@ -71,7 +133,7 @@ export class PrincipalPage implements OnInit {
           handler: () => {
             this._productoService.deleteProducto(producto.id).subscribe({
               next: () => {
-                this.getData(); // Recargar lista de productos
+                this.getData(); // Recargar productos
               },
               error: (err) => {
                 console.error('Error al eliminar producto:', err);
@@ -95,25 +157,18 @@ export class PrincipalPage implements OnInit {
     this.router.navigate(['/crear-producto']);
   }
 
-  private getData() {
-  this._productoService.getProductos().subscribe((productos: producto[]) => {
-    this.productos = productos;
-    this.productosFiltrados = productos;
-  });
-}
+  registrarventa() {
+    this.router.navigate(['/registrar-venta']);
+  }
+
+  cerrarsesion() {
+    this.router.navigate(['/home']);
+  }
 
   public getImages(producto: producto): string | null {
     if (producto && producto.images && producto.images.length > 0) {
       return producto.images[0];
     }
-
     return null;
   }
-
-  public filtrarProductos(event: any) {
-  const query = event.target.value?.toLowerCase() || '';
-  this.productosFiltrados = this.productos.filter(prod =>
-    prod.nombre.toLowerCase().includes(query)
-  );
-}
 }

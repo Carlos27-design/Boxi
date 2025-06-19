@@ -1,33 +1,78 @@
-<app-base1 title="Inicio"></app-base1>
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start"></ion-buttons>
+    <img
+      src="assets/images/LogoBoxi.png"
+      alt="Logo"
+      style="width: 100px; height: auto"
+    />
+    <ion-buttons slot="end">
+      <ion-button (click)="home()">
+        <ion-icon slot="icon-only" name="arrow-back-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
 
 <ion-content [fullscreen]="true">
-
   <div class="input-wrapper">
     <h1>Crear Usuario</h1>
-    <p>A continuacion, rellene los siguientes campos.</p>
-    <ion-input class="inputfield1" labelPlacement="floating" fill="outline">
+    <p>A continuación, rellene los siguientes campos.</p>
+
+    <ion-input
+      class="inputfield1"
+      labelPlacement="floating"
+      fill="outline"
+      placeholder="Nombre completo"
+      [(ngModel)]="registerData.fullName"
+    >
       <div slot="label">Nombre de usuario</div>
     </ion-input>
 
-    <ion-input class="inputfield1" labelPlacement="floating" fill="outline">
+    <ion-input
+      class="inputfield1"
+      labelPlacement="floating"
+      fill="outline"
+      type="email"
+      placeholder="usuario@correo.com"
+      [(ngModel)]="registerData.email"
+    >
       <div slot="label">Email</div>
     </ion-input>
-  
-    <ion-input class="inputfield1" labelPlacement="floating" fill="outline" style="margin-bottom: 20px;">
+
+    <ion-input
+      class="inputfield1"
+      labelPlacement="floating"
+      fill="outline"
+      type="password"
+      [(ngModel)]="registerData.password"
+      placeholder="********"
+      style="margin-bottom: 20px;"
+    >
       <div slot="label">Contraseña</div>
     </ion-input>
 
-    <ion-input class="inputfield1" labelPlacement="floating" fill="outline" style="margin-bottom: 20px;">
+    <ion-input
+      class="inputfield1"
+      labelPlacement="floating"
+      fill="outline"
+      type="password"
+      [(ngModel)]="confirmPassword"
+      placeholder="********"
+      style="margin-bottom: 20px;"
+    >
       <div slot="label">Confirmar Contraseña</div>
     </ion-input>
-    
+
     <div class="checkbox-container">
-      <ion-checkbox class="checkbox" slot="start"></ion-checkbox>
+      <ion-checkbox
+        [(ngModel)]="termsAccepted"
+        class="checkbox"
+        slot="start"
+      ></ion-checkbox>
       <span class="checkbox-label">Acepto los Términos de Servicio.</span>
     </div>
 
-    <ion-button>Crear Usuario</ion-button>
-
-
+    <ion-button expand="block" (click)="crearUsuario()">Crear Usuario</ion-button>
   </div>
 </ion-content>
