@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { catchError, map, of } from 'rxjs';
+import { catchError, map, Observable, of } from 'rxjs';
 import { AuthReponse } from '../interfaces/response-auth.interface';
 import { User } from '../interfaces/user.interface';
 
@@ -10,13 +10,13 @@ const URL = 'http://localhost:3000/api';
   providedIn: 'root',
 })
 export class AuthService {
-  public _authStatus: string = 'checking';
-  public _user: User | null = null;
-  public _token: string | null = localStorage.getItem('token');
+  private _authStatus: string = 'checking';
+  private _user: User | null = null;
+  private _token: string | null = localStorage.getItem('token');
 
   constructor(private http: HttpClient) {}
 
-  get authStatus(): string {
+  public authStatus(): 'authenticated' | 'not-authenticated' | 'checking' {
     if (this._authStatus === 'checking') {
       return 'checking';
     }
@@ -25,25 +25,64 @@ export class AuthService {
       return 'authenticated';
     }
 
-    this._authStatus = 'not-authenticated';
+    return 'not-authenticated';
+  }
 
-    return this._authStatus;
+  public get user(): User | null {
+    return this._user;
+  }
+
+  public get token(): string | null {
+    return this._token;
+  }
+
+  public get isUser() {
+    return this._user?.roles.includes('USER') ?? false;
   }
 
   login(email: string, password: string) {
     return this.http
-      .post(`${URL}/auth/login`, {
+      .post<AuthReponse>(`${URL}/auth/login`, {
         email: email,
         password: password,
       })
       .pipe(
-        map((resp) => this.handleAuthSuccess(resp as AuthReponse)),
+        map((resp) => this.handleAuthSuccess(resp)),
         catchError((error) => this.handleAuthError(error))
       );
   }
 
-  register(data: { fullName: string; email: string; password: string }) {
-    return this.http.post(`${URL}/auth/register`, data);
+  register(fullName: string, email: string, password: string) {
+    return this.http
+      .post<AuthReponse>(`${URL}/auth/register`, {
+        fullName: fullName,
+        email: email,
+        password: password,
+      })
+      .pipe(
+        map((resp) => this.handleAuthSuccess(resp)),
+        catchError((error) => this.handleAuthError(error))
+      );
+  }
+
+  public checkStatus(): Observable<boolean> {
+    const token = localStorage.getItem('token');
+
+    if (!token) {
+      this.logout();
+      return of(false);
+    }
+
+    return this.http.get<AuthReponse>(`${URL}/auth/check-status`).pipe(
+      map((resp) => {
+        this.handleAuthSuccess(resp);
+        return true;
+      }),
+      catchError((error) => {
+        this.handleAuthError(error);
+        return of(false);
+      })
+    );
   }
 
   logout() {

@@ -10,7 +10,7 @@ export const authInterceptor: HttpInterceptorFn = (
   req: HttpRequest<unknown>,
   next: HttpHandlerFn
 ) => {
-  const token = inject(AuthService)._token;
+  const token = inject(AuthService).token;
 
   const newReq = req.clone({
     headers: req.headers.append('Authorization', `Bearer ${token}`),

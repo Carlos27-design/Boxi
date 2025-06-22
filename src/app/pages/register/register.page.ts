@@ -2,46 +2,53 @@ import { Component, inject } from '@angular/core';
 import { AuthService } from 'src/app/service/auth.service';
 import { ToastController } from '@ionic/angular';
 import { Router } from '@angular/router';
+import { FormBuilder, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-register',
   templateUrl: './register.page.html',
   styleUrls: ['./register.page.scss'],
-  standalone:false,
+  standalone: false,
 })
 export class RegisterPage {
-  registerData = {
-    fullName: '',
-    email: '',
-    password: '',
-  };
-
-  confirmPassword: string = '';
-  termsAccepted: boolean = false;
   private readonly router = inject(Router);
-  constructor(private authService: AuthService, private toastCtrl: ToastController) {}
+  private readonly formBuilder = inject(FormBuilder);
+  constructor(
+    private authService: AuthService,
+    private toastCtrl: ToastController
+  ) {}
+
+  public registerForm = this.formBuilder.group({
+    fullName: ['', [Validators.required, Validators.minLength(3)]],
+    email: ['', [Validators.required, Validators.email]],
+    password: ['', [Validators.required, Validators.minLength(6)]],
+    confirmPassword: ['', [Validators.required, Validators.minLength(6)]],
+    termsAccepted: [false, Validators.requiredTrue],
+  });
 
   async crearUsuario() {
-    const { fullName, email, password } = this.registerData;
+    const { fullName, email, password, confirmPassword, termsAccepted } =
+      this.registerForm.value;
 
-    if (!fullName || !email || !password || !this.confirmPassword) {
+    if (!fullName || !email || !password || !confirmPassword) {
       this.presentToast('Todos los campos son obligatorios.');
       return;
     }
 
-    if (password !== this.confirmPassword) {
+    if (password !== confirmPassword) {
       this.presentToast('Las contraseñas no coinciden.');
       return;
     }
 
-    if (!this.termsAccepted) {
+    if (!termsAccepted) {
       this.presentToast('Debe aceptar los términos.');
       return;
     }
 
     try {
-      await this.authService.register(this.registerData).toPromise();
+      await this.authService.register(fullName, email, password).toPromise();
       this.presentToast('Usuario creado exitosamente.');
+      this.router.navigateByUrl('/principal');
     } catch (error) {
       this.presentToast('Error al crear usuario.');
     }
@@ -59,5 +66,4 @@ export class RegisterPage {
   public home() {
     this.router.navigate(['/home']);
   }
-  
 }

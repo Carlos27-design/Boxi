@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ActionSheetController, AlertController } from '@ionic/angular';
+
 import { Router } from '@angular/router';
 import { producto } from 'src/app/models/producto.models';
 import { ProductoService } from 'src/app/service/producto.service';
+import { AuthService } from 'src/app/service/auth.service';
 
 @Component({
   selector: 'app-principal',
@@ -10,7 +12,7 @@ import { ProductoService } from 'src/app/service/producto.service';
   styleUrls: ['./principal.page.scss'],
   standalone: false,
 })
-export class PrincipalPage implements OnInit {
+export class PrincipalPage {
   mostrarFiltros = false;
   filtroActivo = false;
   filtroTipo: string | null = null;
@@ -21,12 +23,13 @@ export class PrincipalPage implements OnInit {
 
   constructor(
     private readonly _productoService: ProductoService,
+    private readonly _authService: AuthService,
     private actionSheetController: ActionSheetController,
     private alertController: AlertController,
     private router: Router
   ) {}
 
-  ngOnInit() {
+  ionViewWillEnter() {
     this.getData();
   }
 
@@ -44,7 +47,7 @@ export class PrincipalPage implements OnInit {
     let resultado = [...this.productos];
 
     if (this.searchQuery && this.searchQuery.trim() !== '') {
-      resultado = resultado.filter(prod =>
+      resultado = resultado.filter((prod) =>
         prod.nombre.toLowerCase().includes(this.searchQuery)
       );
     }
@@ -174,6 +177,7 @@ export class PrincipalPage implements OnInit {
   }
 
   cerrarsesion() {
+    this._authService.logout();
     this.router.navigate(['/home']);
   }
 

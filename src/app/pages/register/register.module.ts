@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 import { ComponentsModule } from 'src/app/components/base1/components.module';
@@ -14,8 +14,9 @@ import { RegisterPage } from './register.page';
     FormsModule,
     IonicModule,
     ComponentsModule,
-    RegisterPageRoutingModule
+    RegisterPageRoutingModule,
+    ReactiveFormsModule,
   ],
-  declarations: [RegisterPage]
+  declarations: [RegisterPage],
 })
 export class RegisterPageModule {}
